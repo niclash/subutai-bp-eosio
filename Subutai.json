@@ -30,10 +30,13 @@
     "source-url": "https://github.com/niclash/subutai-bp-eosio/archive/master.zip",
     "ansible-playbook": "ansible.yml",
     "extra-vars": [
-      {
-        "key": "domain_name",
-        "value": "${domain}"
-      }
+      { "key": "domain_name", "value": "${domain}" },
+      { "key": "symbol", "value": "${symbol}" },
+      { "key": "producer_name", "value": "${producer_name}" },
+      { "key": "port", "value": "${port}" },
+      { "key": "p2p_peer_address", "value": "${p2p_peer_address}" },
+      { "key": "max_clients", "value": "${max_clients}" },
+      { "key": "genesis_url", "value": "${genesis_url}" }
     ],
     "groups": [
       {
