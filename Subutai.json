@@ -76,7 +76,7 @@
       "description": "Maximum number of clients from which connections are accepted, use 0 for no limit",
       "type": "int",
       "default": "300",
-      "validation": ""
+      "validation": "[0-9]*"
     },
     "genesis_url" : {
       "description": "URL to the genesis file of the block chain to be launched. Leave empty for NEW blockchain.",
