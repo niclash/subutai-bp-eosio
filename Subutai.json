@@ -32,7 +32,7 @@
     "extra-vars": [
       { "key": "domain_name", "value": "${domain}" },
       { "key": "symbol", "value": "${symbol}" },
-      { "key": "producer_name", "value": "${producer_name}" },
+      { "key": "producer_name", "value": "${producername}" },
       { "key": "port", "value": "${port}" },
       { "key": "p2p_peer_address", "value": "${p2p_peer_address}" },
       { "key": "max_clients", "value": "${max_clients}" },
@@ -54,7 +54,7 @@
       "default": "VIK",
       "validation": "^[A-Z][A-Za-z]{0,4}$"
     },
-    "producer_name": {
+    "producername": {
       "description": "Name of Block Producer Candidate",
       "type": "string",
       "default": "",
