@@ -32,7 +32,7 @@
     "extra-vars": [
       { "key": "domain_name", "value": "${domain}" },
       { "key": "symbol", "value": "${symbol}" },
-      { "key": "producer_name", "value": "${producername}" },
+      { "key": "producer_name", "value": "${producer_name}" },
       { "key": "port", "value": "${port}" },
       { "key": "p2p_peer_address", "value": "${p2p_peer_address}" },
       { "key": "max_clients", "value": "${max_clients}" },
@@ -54,11 +54,11 @@
       "default": "VIK",
       "validation": "^[A-Z][A-Za-z]{0,4}$"
     },
-    "producername": {
-      "description": "Name of Block Producer Candidate",
+    "producer_name": {
+      "description": "Name of Block Producer Candidate. Must be 12 characters, per EOS",
       "type": "string",
-      "default": "",
-      "validation": "[a-zA-Z0-9]+"
+      "default": "abcdxyz12345",
+      "validation": "^[a-z1-5]{12}$"
     },
     "port":{
       "description": "P2P port for this node",
@@ -69,7 +69,7 @@
     "p2p_peer_address":{
       "description": "The public endpoint of another peer node to connect to.",
       "type": "string",
-      "default": "",
+      "default": "eos1.envs.subutai.cloud:9876",
       "validation": ".+(\\..+)*:[0-9]+"
     },
     "max_clients": {
