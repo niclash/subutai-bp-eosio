@@ -1,0 +1,56 @@
+---
+
+- hosts: all
+  gather_facts: false
+  remote_user: root
+  tasks:
+    # Add specified repository into sources list.
+    - apt_repository:
+        repo: deb http://thinkingbeers.com/debian subutai main
+        state: present
+
+    - name: Update
+      raw: apt-get -y --allow-unauthenticated update || true
+
+    - name: Ensure python is available
+      raw: test -e /usr/bin/python || apt install -y --allow-unauthenticated python-minimal
+
+    - name: Ensure python-apt is available
+      raw: test -d /usr/share/python-apt || apt install -y --allow-unauthenticated python-apt
+
+    - name: Upgrade
+      raw: apt-get -y --allow-unauthenticated upgrade
+
+- hosts: bp
+  remote_user: root
+  tasks:
+    - name: Update APT cache
+      apt:
+        update_cache: yes
+
+    - name: Add dependencies
+      apt:
+        name: {{item}}
+      with_items:
+        - git
+
+    - name: Clone the EOSIO source code
+      git:
+        repo: https://github.com/eosgermany/eos.git
+        dest: /eosio
+        version: "{{eosio_version}}"
+
+    - name: Check if build already exists
+      file:
+        path: /eosio/build/programs/nodeos/nodeos
+      register: nodeos_present
+
+    - name: Build EOSIO from source
+      command: bash eosio_build.sh
+      args:
+        argv:
+          - "-s {{symbol}}"
+          - "-o Release"
+        chdir: /eosio
+        creates: /eosio/build/programs/
+
