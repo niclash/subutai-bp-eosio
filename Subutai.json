@@ -51,7 +51,7 @@
     "symbol": {
       "description": "Name of Block Producer Candidate",
       "type": "string",
-      "default": "VIK",
+      "default": "XYZ",
       "validation": "^[A-Z][A-Za-z]{0,4}$"
     },
     "producer_name": {
