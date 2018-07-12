@@ -33,7 +33,8 @@
       { "key": "domain_name", "value": "${domain}" },
       { "key": "symbol", "value": "${symbol}" },
       { "key": "producer_name", "value": "${producer_name}" },
-      { "key": "port", "value": "${port}" },
+      { "key": "port1", "value": "${port1}" },
+      { "key": "port2", "value": "${port2}" },
       { "key": "p2p_peer_address", "value": "${p2p_peer_address}" },
       { "key": "max_clients", "value": "${max_clients}" },
       { "key": "genesis_url", "value": "${genesis_url}" }
