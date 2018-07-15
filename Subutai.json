@@ -1,7 +1,7 @@
 {
   "name": "EOSIO Block Producer",
   "description": "EOSIO - Blockchain as a Blueprint",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "author": "https://github.com/niclash",
   "ssh-key": "niclas",
   "containers": [
@@ -13,9 +13,9 @@
       "port-mapping": [
         {
           "protocol": "tcp",
-          "domain": "${domain}",
+          "domain": "${hostName}",
           "internal-port": "9876",
-          "external-port": "${port1}"
+          "external-port": "${port}"
         }
       ]
     }
@@ -30,7 +30,7 @@
     "source-url": "https://github.com/niclash/subutai-bp-eosio/archive/master.zip",
     "ansible-playbook": "ansible.yml",
     "extra-vars": [
-      { "key": "domain_name", "value": "${domain}" },
+      { "key": "hostname", "value": "${hostName}" },
       { "key": "symbol", "value": "${symbol}" },
       { "key": "producer_name", "value": "${producerName}" },
       { "key": "port", "value": "${port}" },
@@ -59,6 +59,12 @@
       "type": "string",
       "default": "eos1.envs.subutai.cloud:9876",
       "validation": ".+(\\..+)*:[0-9]+"
+    },
+    "hostName": {
+      "description": "Hostname of the block producer",
+      "type": "domain",
+      "default": "",
+      "validation": ""
     },
     "genesisUrl": {
       "description": "URL to the genesis file of the block chain to be launched. Leave empty for NEW blockchain.",
