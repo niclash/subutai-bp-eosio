@@ -15,7 +15,7 @@
           "protocol": "tcp",
           "domain": "${domain}",
           "internal-port": "9876",
-          "external-port": "${port}"
+          "external-port": "${port1}"
         }
       ]
     }
@@ -32,12 +32,11 @@
     "extra-vars": [
       { "key": "domain_name", "value": "${domain}" },
       { "key": "symbol", "value": "${symbol}" },
-      { "key": "producer_name", "value": "${producer_name}" },
-      { "key": "port1", "value": "${port1}" },
-      { "key": "port2", "value": "${port2}" },
-      { "key": "p2p_peer_address", "value": "${p2p_peer_address}" },
-      { "key": "max_clients", "value": "${max_clients}" },
-      { "key": "genesis_url", "value": "${genesis_url}" }
+      { "key": "producer_name", "value": "${producerName}" },
+      { "key": "port", "value": "${port}" },
+      { "key": "p2p_peer_address", "value": "${bootAddress}" },
+      { "key": "max_clients", "value": "${maxClients}" },
+      { "key": "genesis_url", "value": "${genesisUrl}" }
     ],
     "groups": [
       {
@@ -55,41 +54,35 @@
       "default": "XYZ",
       "validation": "^[A-Z][A-Za-z]{0,4}$"
     },
-    "producer_name": {
-      "description": "Name of Block Producer Candidate. Must be 12 characters, per EOS",
-      "type": "string",
-      "default": "abcdxyz12345",
-      "validation": "^[a-z1-5]{12}$"
-    },
-    "port1":{
-      "description": "P2P port for this node",
-      "type": "int",
-      "default": "9876",
-      "validation": ""
-    },
-    "port2":{
-      "description": "P2P port for this node",
-      "type": "int",
-      "default": "9877",
-      "validation": ""
-    },
-    "p2p_peer_address":{
+    "bootAddress": {
       "description": "The public endpoint of another peer node to connect to.",
       "type": "string",
       "default": "eos1.envs.subutai.cloud:9876",
       "validation": ".+(\\..+)*:[0-9]+"
     },
-    "max_clients": {
-      "description": "Maximum number of clients from which connections are accepted, use 0 for no limit",
-      "type": "int",
-      "default": "300",
-      "validation": "[0-9]*"
-    },
-    "genesis_url" : {
+    "genesisUrl": {
       "description": "URL to the genesis file of the block chain to be launched. Leave empty for NEW blockchain.",
       "type": "string",
       "default": "",
       "validation": ""
+    },
+    "producerName": {
+      "description": "Name of Block Producer Candidate. Must be 12 characters, per EOS",
+      "type": "string",
+      "default": "abcdxyz12345",
+      "validation": "^[a-z1-5]{12}$"
+    },
+    "port": {
+      "description": "P2P port for this node",
+      "type": "int",
+      "default": "9876",
+      "validation": ""
+    },
+    "maxClients": {
+      "description": "Maximum number of clients from which connections are accepted, use 0 for no limit",
+      "type": "int",
+      "default": "300",
+      "validation": "[0-9]*"
     }
   }
 }
