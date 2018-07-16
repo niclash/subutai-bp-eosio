@@ -1,7 +1,7 @@
 {
   "name": "EOSIO Block Producer",
   "description": "EOSIO - Blockchain as a Blueprint",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "author": "https://github.com/niclash",
   "ssh-key": "niclas",
   "containers": [
@@ -38,7 +38,7 @@
       { "key": "max_clients", "value": "${maxClients}" },
       { "key": "genesis_url", "value": "${genesisUrl}" },
       { "key": "keys", "value": {
-        "signing": {"public": "", "private": ""}
+        "signing": {"public": "${public_signing_key}", "private": "${private_signing_key}"}
       } }
     ],
     "groups": [
