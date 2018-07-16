@@ -4,11 +4,6 @@
   gather_facts: false
   remote_user: root
   tasks:
-    # Add specified repository into sources list.
-    - apt_repository:
-        repo: deb http://thinkingbeers.com/debian subutai main
-        state: present
-
     - name: Update
       raw: apt-get -y --allow-unauthenticated update || true
 
