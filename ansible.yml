@@ -30,7 +30,7 @@
 
     - name: Add dependencies
       apt:
-        name: {{item}}
+        name: "{{item}}"
       with_items:
         - git
 
