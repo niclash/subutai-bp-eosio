@@ -73,7 +73,7 @@
       "description": "URL to the genesis file of the block chain to be launched. Leave empty for NEW blockchain.",
       "type": "string",
       "default": "",
-      "validation": ""
+      "validation": "@^(https?|ftp)://[^\s/$.?#].[^\s]*$@iS"
     },
     "producerName": {
       "description": "Name of Block Producer Candidate. Must be 12 characters, per EOS",
@@ -85,7 +85,7 @@
       "description": "P2P port for this node",
       "type": "int",
       "default": "9876",
-      "validation": ""
+      "validation": "[0-9]*"
     },
     "maxClients": {
       "description": "Maximum number of clients from which connections are accepted, use 0 for no limit",
