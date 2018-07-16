@@ -1,95 +1,73 @@
-# Track only transactions whose scopes involve the listed accounts. Default is to track all transactions. (eosio::account_history_plugin)
-# filter_on_accounts = 
-
-# Limits the maximum time (in milliseconds) processing a single get_transactions call. (eosio::account_history_plugin)
+# Limits the maximum time (in milliseconds) processing a single get_transactions call.
 get-transactions-time-limit = 3
 
-# File to read Genesis State from (eosio::chain_plugin)
-genesis-json = "genesis.json"
-
-# override the initial timestamp in the Genesis State file (eosio::chain_plugin)
-# genesis-timestamp = 
-
-# the location of the block log (absolute path or relative to application data dir) (eosio::chain_plugin)
+# the location of the block log (absolute path or relative to application data dir)
 block-log-dir = "blocks"
 
-# Pairs of [BLOCK_NUM,BLOCK_ID] that should be enforced as checkpoints. (eosio::chain_plugin)
-# checkpoint = 
-
-# Limits the maximum time (in milliseconds) that a reversible block is allowed to run before being considered invalid (eosio::chain_plugin)
-max-reversible-block-time = -1
-
-# Limits the maximum time (in milliseconds) that is allowed a pushed transaction's code to execute before being considered invalid (eosio::chain_plugin)
-max-pending-transaction-time = -1
-
-# Limits the maximum time (in milliseconds) that is allowed a to push deferred transactions at the start of a block (eosio::chain_plugin)
-max-deferred-transaction-time = 20
-
-# Override default WASM runtime (eosio::chain_plugin)
-# wasm-runtime = 
+# Pairs of [BLOCK_NUM,BLOCK_ID] that should be enforced as checkpoints.
+# checkpoint =
 
 # Maximum size MB of database shared memory file (eosio::chain_plugin)
-shared-memory-size-mb = 32768
+shared-memory-size-mb = 1024
 
-# Time to wait, in milliseconds, between creating next faucet created account. (eosio::faucet_testnet_plugin)
-faucet-create-interval-ms = 1000
+{% if http is defined %}
+# The local IP and port to listen for incoming http connections.
+http-server-address = {{http.server}}:{{http.port}}
+{% endif %}
 
-# Name to use as creator for faucet created accounts. (eosio::faucet_testnet_plugin)
-faucet-name = faucet
-
-# [public key, WIF private key] for signing for faucet creator account (eosio::faucet_testnet_plugin)
-faucet-private-key = ["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
-
-# The local IP and port to listen for incoming http connections; set blank to disable. (eosio::http_plugin)
-http-server-address = localhost:8889
-
+{% if https is defined %}
 # The local IP and port to listen for incoming https connections; leave blank to disable. (eosio::http_plugin)
-# https-server-address = 
+https-server-address = {{https.server}}:{{https.port}}
 
 # Filename with the certificate chain to present on https connections. PEM format. Required for https. (eosio::http_plugin)
-# https-certificate-chain-file = 
+https-certificate-chain-file = {{https.cert_chain_file}}
 
 # Filename with https private key in PEM format. Required for https (eosio::http_plugin)
-# https-private-key-file = 
+https-private-key-file = {{https.priv_key_file}}
 
-# Specify the Access-Control-Allow-Origin to be returned on each request. (eosio::http_plugin)
-# access-control-allow-origin = 
+{% endif %}
 
-# Specify the Access-Control-Allow-Headers to be returned on each request. (eosio::http_plugin)
-# access-control-allow-headers = 
+# The Access-Control-Allow-Origin http value
+# access-control-allow-origin = *
 
-# Specify if Access-Control-Allow-Credentials: true should be returned on each request. (eosio::http_plugin)
+# The Access-Control-Allow-Headers http value
+# access-control-allow-headers = Content-Type
+
+# true if Access-Control-Allow-Credentials: true should be specified in http response header
 access-control-allow-credentials = false
 
-# The actual host:port used to listen for incoming p2p connections. (eosio::net_plugin)
-p2p-listen-endpoint = 0.0.0.0:9876
+# The local IP address and port to listen for incoming connections.
+p2p-listen-endpoint = {{p2p.server}}:{{p2p.port}}
 
 # An externally accessible host:port for identifying this node. Defaults to p2p-listen-endpoint. (eosio::net_plugin)
-p2p-server-address = {{hostname}}:{{port}}
+p2p-server-address = {{p2p.server}}:{{p2p.port}}
 
-# The public endpoint of a peer node to connect to. Use multiple p2p-peer-address options as needed to compose a network. (eosio::net_plugin)
-p2p-peer-address = {{p2p_peer_address}}
+# Log level: one of 'all', 'debug', 'info', 'warn', 'error', or 'off'
+log-level-net-plugin = info
 
-# The name supplied to identify this node amongst the peers. (eosio::net_plugin)
-agent-name = "{{producer_name}}_primary"
+# The name supplied to identify this node amongst the peers.
+agent-name = "{{agent.name}}"
 
 # Can be 'any' or 'producers' or 'specified' or 'none'. If 'specified', peer-key must be specified at least once. If only 'producers', peer-key is not required. 'producers' and 'specified' may be combined. (eosio::net_plugin)
 allowed-connection = any
 
 # Optional public key of peer allowed to connect.  May be used multiple times. (eosio::net_plugin)
-peer-key = {{peer_key}}
+# peer-key =
 
 # Tuple of [PublicKey, WIF private key] (may specify multiple times) (eosio::net_plugin)
-peer-private-key = {{peer_private_key}}
+# peer-private-key =
 
 # Maximum number of clients from which connections are accepted, use 0 for no limit (eosio::net_plugin)
-max-clients = {{max_clients}}
+max-clients = 250
 
 # number of seconds to wait before cleaning up dead connections (eosio::net_plugin)
 connection-cleanup-period = 30
 
-# True to require exact match of peer network version. (eosio::net_plugin)
-network-version-match = 0
+# Enable block production, even if the chain is stale.
+enable-stale-production = false
+
+# True to require exact match of peer network version.
+network-version-match = 1
 
 # number of blocks to retrieve in a chunk from any individual peer during synchronization (eosio::net_plugin)
 sync-fetch-span = 100
@@ -97,30 +75,60 @@ sync-fetch-span = 100
 # maximum sizes of transaction or block messages that are sent without first sending a notice (eosio::net_plugin)
 max-implicit-request = 1500
 
-# Enable block production, even if the chain is stale. (eosio::producer_plugin)
-enable-stale-production = false
-
-# Percent of producers (0-100) that must be participating in order to produce blocks (eosio::producer_plugin)
+# Percent of producers (0-99) that must be participating in order to produce blocks
 required-participation = 33
-
-# ID of producer controlled by this node (e.g. inita; may specify multiple times) (eosio::producer_plugin)
-# producer-name = 
-
-# Tuple of [public key, WIF private key] (may specify multiple times) (eosio::producer_plugin)
-private-key = ["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
 
 # Lag in number of blocks from the head block when selecting the reference block for transactions (-1 means Last Irreversible Block) (eosio::txn_test_gen_plugin)
 txn-reference-block-lag = 0
+max-transaction-time = 10000
+max-irreversible-block-age = -1
+unlock-timeout = 900
+chain-state-db-size-mb = 1024
+reversible-blocks-db-size-mb = 340
+contracts-console = false
 
-# The path of the wallet files (absolute path or relative to application data dir) (eosio::wallet_plugin)
-wallet-dir = "."
+# See https://github.com/HKEOS/Ghostbusters-Testnet/pull/26/files#diff-0
+plugin = eosio::chain_api_plugin
+plugin = eosio::chain_plugin
 
-# Timeout for unlocked wallet in seconds. Wallets will automatically lock after specified number of seconds of inactivity. Activity is defined as any wallet command e.g. list-wallets. (eosio::wallet_plugin)
-# unlock-timeout = 
+# History plugin needs to be enabled
+plugin = eosio::history_api_plugin
+plugin = eosio::history_plugin
 
-# eosio key that will be imported automatically when a wallet is created. (eosio::wallet_plugin)
-# eosio-key = 
+{% if http is defined %}
+plugin = eosio::http_plugin
+plugin = eosio::history_api_plugin
+{% endif %}
 
-# Plugin(s) to enable, may be specified multiple times
-# plugin = 
+# how to pause the production of blocks via the producer (plugin) api
+# curl http://127.0.0.1:16000/v1/producer/pause / Igor from RIO
+# curl http://127.0.0.1:8888/v1/producer/pause
+# curl http://127.0.0.1:9876/v1/producer/pause
+# plugin = eosio::producer_api_plugin
+pause-on-startup = false
+
+# net_api_plugin removed due to security issues
+# See https://steemit.com/eos/@eostribe/eos-bp-security-statement
+
+#plugin = eosio::net_api_plugin
+#plugin = eosio::wallet_api_plugin
+#plugin = eosio::mongo_db_plugin
+
+# The public endpoint of a peer node to connect to. Use multiple p2p-peer-address options as needed to compose a network. (eosio::net_plugin)
+{% if (no_mesh | default(false)) == false  %}
+{% for peer in trusted_peers %}
+p2p-peer-address = {{peer.primary}}
+{% if peer.secondary is defined %}
+p2p-peer-address = {{peer.secondary}}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+signature-provider={{keys.signing.public}}=KEY:{{keys.signing.private}}
+
+{% if producer is defined %}
+{%   if producer.name is defined %}
+producer-name = {{producer.name}}
+{%   endif %}
+{% endif %}
 

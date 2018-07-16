@@ -1,0 +1,137 @@
+---
+- name: Add Debian "testing" key
+  apt_key:
+    id: 7638D0442B90D010
+    keyserver: pgp.mit.edu
+
+- name: Add Debian "testing" repository
+  apt_repository: 
+    repo: deb http://deb.debian.org/debian/ testing main
+    state: present
+
+- name: Add Debian "stretch-backports" repository
+  apt_repository: 
+    repo: deb http://deb.debian.org/debian/ stretch-backports main
+    state: present
+
+- name: Install nodeos dependencies
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+  with_items:
+    - libtinfo6
+
+- name: Create directories
+  file:
+    path: "{{item}}"
+    state: directory
+    mode: 0775
+    owner: nodeos
+    group: nodeos
+  with_items:
+    - "{{dir.bin}}"
+    - "{{dir.conf}}"
+    - "{{dir.data}}/../"
+    - "{{dir.data}}"
+    - "{{dir.log}}"
+  notify: restart nodeos
+
+- name: Copy nodeos executable
+  copy:
+    src: "nodeos"
+    dest: "{{dir.bin}}"
+    mode: 0755
+  notify: restart nodeos
+
+- name: Copy genesis.json.j2.j2
+  copy:
+    src: "genesis.json.j2"
+    dest: "{{dir.conf}}"
+    mode: 0644
+  notify: coldstart nodeos
+
+- name: Copy start script
+  template:
+    src: "join.sh.j2"
+    dest: "{{dir.bin}}/join.sh"
+    mode: 0755
+  notify: restart nodeos
+
+- name: Copy nodeos configuration
+  template:
+    src: "config.ini.j2"
+    dest: "{{dir.conf}}/config.ini"
+    mode: 0644
+  notify: restart nodeos
+
+- name: Copy systemd unit file for nodeos
+  template:
+    src: "nodeos.service.j2"
+    dest: "/etc/systemd/system/nodeos.service"
+    mode: 0644
+  notify: restart nodeos
+
+- name: create p2p zone
+  lineinfile:
+    destfile: "/etc/shorewall/zones"
+    line: "p2p    ipv4"
+  notify: restart shorewall
+  when: enable_protection
+
+- name: enable trusted peers to penetrate firewall
+  lineinfile:
+    destfile: "/etc/shorewall/rules"
+    line: "ACCEPT		p2p		fw		tcp	{{item.port}}    # {{item.comment}}"
+  notify: restart shorewall
+  when: enable_protection
+  with_items:
+    - port: "{{p2p.port}}"
+      comment: "nodeos - Block Producer"
+
+- name: enable public port for BP
+  lineinfile:
+    destfile: "/etc/shorewall/rules"
+    line: "{{item}}" 
+  notify: restart shorewall
+  when: p2p is defined
+  with_items:
+    - "ACCEPT		all		all		tcp	{{p2p.port}}    # nodeos - BP"
+    - "ACCEPT		cz4		all		tcp	{{p2p.port}}    # nodeos - BP"
+
+- name: enable public port for API
+  lineinfile:
+    destfile: "/etc/shorewall/rules"
+    line: "ACCEPT		all		all		tcp	{{http.port}}    # nodeos - API"
+  notify: restart shorewall
+  when: http is defined
+
+- name: "Redirect published API port {{http.public}} to {{http.port}} of the server"
+  lineinfile:
+    destfile: "/etc/shorewall/rules"
+    line: "REDIRECT        inet4              {{http.port}}            tcp    {{http.public}}   - # port {{http.public}} -> {{http.port}}"
+  notify: restart shorewall
+  when: http is defined
+
+- name: enable public SSL port for API
+  lineinfile:
+    destfile: "/etc/shorewall/rules"
+    line: "ACCEPT		all		all		tcp	{{https.port}}    # nodeos - SSL API"
+  notify: restart shorewall
+  when: https is defined
+
+- name: "Redirect published API port {{https.public}} to {{https.port}} of the server"
+  lineinfile:
+    destfile: "/etc/shorewall/rules"
+    line: "REDIRECT        inet4              {{https.port}}            tcp    {{https.public}}   - # port {{https.public}} -> {{https.port}}"
+  notify: restart shorewall
+  when: https is defined
+
+- name:
+  blockinfile:
+      dest: "/etc/shorewall/hosts"
+      block: "{% if item.allowed_ips is defined %}{% for allowed in item.allowed_ips %}p2p	{{ ansible_default_ipv4.interface }}:{{allowed}}/32\n{% endfor %}{% endif %}"
+      marker: "# {mark} Connections from {{ item.name }}"
+  notify: restart shorewall
+  when: enable_protection
+  with_items: "{{trusted_peers}}"

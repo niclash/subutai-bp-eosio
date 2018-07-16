@@ -1,0 +1,20 @@
+---
+- name: restart shorewall
+  shell: /bin/systemctl daemon-reload
+  notify: restart shorewall2
+
+- name: restart shorewall2
+  service: name=shorewall state=restarted
+
+- name: coldstart nodeos
+  file:
+    path: "{{dir.conf}}/coldstart"
+    state: touch
+  notify: restart nodeos
+
+- name: restart nodeos
+  shell: /bin/systemctl daemon-reload
+  notify: restart nodeos2
+
+- name: restart nodeos2
+  service: name=nodeos state=restarted

@@ -32,11 +32,14 @@
     "extra-vars": [
       { "key": "hostname", "value": "${hostName}" },
       { "key": "symbol", "value": "${symbol}" },
-      { "key": "producer_name", "value": "${producerName}" },
-      { "key": "port", "value": "${port}" },
-      { "key": "p2p_peer_address", "value": "${bootAddress}" },
+      { "key": "agent", "value": {"name" : "${producerName}" }},
+      { "key": "p2p", "value": {"host": "${hostName}", "port": "${port}" }},
+      { "key": "trusted_peers", "value": { "primary" : "${bootAddress}" } },
       { "key": "max_clients", "value": "${maxClients}" },
-      { "key": "genesis_url", "value": "${genesisUrl}" }
+      { "key": "genesis_url", "value": "${genesisUrl}" },
+      { "key": "keys", "value": {
+        "signing": {"public": "", "private": ""}
+      } }
     ],
     "groups": [
       {
@@ -89,6 +92,18 @@
       "type": "int",
       "default": "300",
       "validation": "[0-9]*"
+    },
+    "private_signing_key": {
+      "description": "Private signing key.",
+      "type": "string",
+      "default": "",
+      "validation": "5[a-zA-Z0-9]*"
+    },
+    "public_signing_key": {
+      "description": "Public signing key.",
+      "type": "string",
+      "default": "",
+      "validation": "EOS[a-zA-Z0-9]*"
     }
   }
 }
