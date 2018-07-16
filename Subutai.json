@@ -73,7 +73,7 @@
       "description": "URL to the genesis file of the block chain to be launched. Leave empty for NEW blockchain.",
       "type": "string",
       "default": "",
-      "validation": "@^(https?|ftp)://[^\s/$.?#].[^\s]*$@iS"
+      "validation": ""
     },
     "producerName": {
       "description": "Name of Block Producer Candidate. Must be 12 characters, per EOS",
