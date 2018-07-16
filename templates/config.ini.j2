@@ -37,16 +37,16 @@ https-private-key-file = {{https.priv_key_file}}
 access-control-allow-credentials = false
 
 # The local IP address and port to listen for incoming connections.
-p2p-listen-endpoint = {{p2p.server}}:{{p2p.port}}
+p2p-listen-endpoint = {{p2p_host}}:{{p2p_port}}
 
 # An externally accessible host:port for identifying this node. Defaults to p2p-listen-endpoint. (eosio::net_plugin)
-p2p-server-address = {{p2p.server}}:{{p2p.port}}
+p2p-server-address = {{p2p_host}}:{{p2p_port}}
 
 # Log level: one of 'all', 'debug', 'info', 'warn', 'error', or 'off'
 log-level-net-plugin = info
 
 # The name supplied to identify this node amongst the peers.
-agent-name = "{{agent.name}}"
+agent-name = "{{agent_name}}"
 
 # Can be 'any' or 'producers' or 'specified' or 'none'. If 'specified', peer-key must be specified at least once. If only 'producers', peer-key is not required. 'producers' and 'specified' may be combined. (eosio::net_plugin)
 allowed-connection = any
@@ -117,18 +117,13 @@ pause-on-startup = false
 # The public endpoint of a peer node to connect to. Use multiple p2p-peer-address options as needed to compose a network. (eosio::net_plugin)
 {% if (no_mesh | default(false)) == false  %}
 {% for peer in trusted_peers %}
-p2p-peer-address = {{peer.primary}}
-{% if peer.secondary is defined %}
-p2p-peer-address = {{peer.secondary}}
-{% endif %}
+p2p-peer-address = {{peer}}
 {% endfor %}
 {% endif %}
 
-signature-provider={{keys.signing.public}}=KEY:{{keys.signing.private}}
+signature-provider={{public_signing_key}}=KEY:{{private_signing_key}}
 
-{% if producer is defined %}
-{%   if producer.name is defined %}
-producer-name = {{producer.name}}
+{%   if agent_name is defined %}
+producer-name = {{agent_name}}
 {%   endif %}
-{% endif %}
 

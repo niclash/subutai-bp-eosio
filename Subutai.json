@@ -1,7 +1,7 @@
 {
   "name": "EOSIO Block Producer",
   "description": "EOSIO - Blockchain as a Blueprint",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "author": "https://github.com/niclash",
   "ssh-key": "niclas",
   "containers": [
@@ -32,14 +32,14 @@
     "extra-vars": [
       { "key": "hostname", "value": "${hostName}" },
       { "key": "symbol", "value": "${symbol}" },
-      { "key": "agent", "value": {"name" : "${producerName}" }},
-      { "key": "p2p", "value": {"host": "${hostName}", "port": "${port}" }},
-      { "key": "trusted_peers", "value": { "primary" : "${bootAddress}" } },
+      { "key": "agent_name", "value": "${producerName}" },
+      { "key": "p2p_host", "value": "${hostName}" },
+      { "key": "p2p_port", "value": "${port}" },
+      { "key": "trusted_peers", "value": "${bootAddress}" },
       { "key": "max_clients", "value": "${maxClients}" },
       { "key": "genesis_url", "value": "${genesisUrl}" },
-      { "key": "keys", "value": {
-        "signing": {"public": "${publicSigningKey}", "private": "${privateSigningKey}"}
-      } }
+      { "key": "public_signing_key", "value": "${publicSigningKey}"},
+      { "key": "private_signing_key", "value": "${privateSigningKey}"}
     ],
     "groups": [
       {
