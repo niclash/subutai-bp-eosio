@@ -38,7 +38,7 @@
       { "key": "max_clients", "value": "${maxClients}" },
       { "key": "genesis_url", "value": "${genesisUrl}" },
       { "key": "keys", "value": {
-        "signing": {"public": "${public_signing_key}", "private": "${private_signing_key}"}
+        "signing": {"public": "${publicSigningKey}", "private": "${privateSigningKey}"}
       } }
     ],
     "groups": [
@@ -93,13 +93,13 @@
       "default": "300",
       "validation": "[0-9]*"
     },
-    "private_signing_key": {
+    "privateSigningKey": {
       "description": "Private signing key.",
       "type": "string",
       "default": "",
       "validation": "5[a-zA-Z0-9]*"
     },
-    "public_signing_key": {
+    "publicSigningKey": {
       "description": "Public signing key.",
       "type": "string",
       "default": "",
